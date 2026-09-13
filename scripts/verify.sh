@@ -4,7 +4,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 echo '== protocol tests =='
-node --test packages/protocol/test/*.test.js
+npm test
 
 echo '== deterministic judge demo =='
 node apps/agent-bridge/src/demo.js >/tmp/boundkey-demo.out
@@ -17,7 +17,16 @@ echo '== bridge HTTP smoke =='
 node apps/agent-bridge/src/server.js >/tmp/boundkey-bridge.log 2>&1 &
 PID=$!
 trap 'kill "$PID" 2>/dev/null || true' EXIT
-sleep 0.35
+for attempt in $(seq 1 60); do
+  if curl -fsS http://127.0.0.1:8787/health >/tmp/boundkey-health.json 2>/dev/null; then
+    break
+  fi
+  if ! kill -0 "$PID" 2>/dev/null; then
+    cat /tmp/boundkey-bridge.log
+    exit 1
+  fi
+  sleep 0.5
+done
 curl -fsS http://127.0.0.1:8787/health | grep -q 'BoundKey'
 RESPONSE="$(curl -fsS -X POST http://127.0.0.1:8787/requests -H 'content-type: application/json' -d '{"agentName":"Codex","maxSpend":0.25}')"
 node -e 'const x=JSON.parse(process.argv[1]); if(!x.deepLink.startsWith("boundkey://authorize") || x.proofValid!==true) process.exit(1)' "$RESPONSE"
