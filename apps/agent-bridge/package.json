@@ -1,0 +1,18 @@
+{
+  "name": "@boundkey/agent-bridge",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "mpp:session": "tsx src/run-mpp-session.ts"
+  },
+  "dependencies": {
+    "@solana/kit": "6.10.0",
+    "@solana/mpp": "0.7.0",
+    "mppx": "0.8.15"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.2"
+  }
+}

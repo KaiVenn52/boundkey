@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "BoundKey",
+    "slug": "boundkey",
+    "version": "0.2.0",
+    "orientation": "portrait",
+    "scheme": "boundkey",
+    "userInterfaceStyle": "dark",
+    "android": {
+      "package": "com.kaivenn.boundkey",
+      "permissions": ["CAMERA"],
+      "adaptiveIcon": { "backgroundColor": "#09090B" },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": false,
+          "data": [{ "scheme": "boundkey", "host": "authorize" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": ["expo-router", ["expo-camera", { "cameraPermission": "Allow BoundKey to scan agent authorization QR codes." }]],
+    "experiments": { "typedRoutes": true }
+  }
+}

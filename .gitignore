@@ -1,0 +1,12 @@
+node_modules/
+.superstack/
+.expo/
+apps/mobile/android/
+android/.gradle/
+android/app/build/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+boundkey-submission.zip

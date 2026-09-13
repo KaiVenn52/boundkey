@@ -1,0 +1,25 @@
+{
+  "name": "boundkey",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "overrides": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "scripts": {
+    "test": "node --test packages/protocol/test/*.test.js && npm run test:mobile-security && npm run test:bridge-security",
+    "test:mobile-security": "tsx --test apps/mobile/src/lib/request.test.ts",
+    "test:bridge-security": "node --test apps/agent-bridge/src/server.test.js",
+    "demo": "node apps/agent-bridge/src/demo.js",
+    "bridge": "node apps/agent-bridge/src/server.js",
+    "pack": "bash scripts/package.sh",
+    "verify": "bash scripts/verify.sh",
+    "merchant": "npm --workspace @boundkey/demo-merchant start",
+    "mpp:session": "npm --workspace @boundkey/agent-bridge run mpp:session --"
+  }
+}
