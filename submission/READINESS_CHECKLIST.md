@@ -24,7 +24,7 @@
 
 - [x] Clean dependency install and committed lockfile.
 - [x] Android typecheck, Expo Doctor 19/19 and clean prebuild pass locally.
-- [ ] Signed/installable APK produced.
+- [x] Debug-signed APK produced by GitHub Actions and downloaded with SHA-256.
 - [ ] App tested on real Android/Seeker + MWA wallet.
 - [ ] Bridge/merchant exposed via stable HTTPS endpoints.
 - [ ] One live MPP session completed with tiny funds.
@@ -32,7 +32,7 @@
 - [ ] Receipt/channel id saved in `submission/EVIDENCE.md`.
 - [ ] 90-second video recorded and captioned.
 - [x] Pitch deck exported.
-- [ ] Public GitHub repository created.
+- [x] Public GitHub repository created.
 - [ ] Final repository link, APK, demo video and deck submitted.
 - [ ] Winning app published to Solana dApp Store if required for prize claim.
 

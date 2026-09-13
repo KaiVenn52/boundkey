@@ -58,7 +58,7 @@ BoundKey turns the phone into the **root of financial authority** and the agent 
 | Official MPP `SessionOpener` handoff back to desktop | ✅ implemented |
 | Deterministic offline judge demo / attack demo | ✅ implemented |
 | Real chain transaction evidence | ⏳ run `docs/LIVE_DEMO.md` with funded wallets before final submission |
-| Android debug APK | ⏳ GitHub Actions build configured; artifact must pass CI and device install |
+| Android debug APK | ✅ CI-built + SHA-256 recorded; physical-device install still required |
 
 We intentionally distinguish **code-complete integration** from **a transaction we can prove happened**. Do not claim a live payment until the final demo run produces the signature/receipt.
 
