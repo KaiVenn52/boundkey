@@ -7,7 +7,7 @@
   "dependencies": {
     "@scure/base": "^2.0.0",
     "@solana/kit": "6.10.0",
-    "@solana/pay-kit": "0.10.0",
+    "@solana/pay-kit": "0.7.0",
     "express": "^5.1.0",
     "mppx": "0.8.15"
   },

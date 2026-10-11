@@ -1,20 +1,28 @@
 import express from 'express';
+import { randomBytes } from 'node:crypto';
 import { base58 } from '@scure/base';
-import { createKeyPairSignerFromBytes } from '@solana/kit';
+import { createKeyPairSignerFromBytes, generateKeyPairSigner } from '@solana/kit';
 import { createPayKit, session, usd } from '@solana/pay-kit';
 
 const privateKey = process.env.SOLANA_PRIVATE_KEY;
-const recipient = process.env.SOLANA_RECIPIENT;
+const recipient = process.env.SOLANA_RECIPIENT ?? process.argv[2];
 const network = process.env.SOLANA_NETWORK === 'mainnet' ? 'mainnet' : 'devnet';
 const rpcUrl = process.env.SOLANA_RPC_URL ?? (network === 'mainnet' ? 'https://api.mainnet-beta.solana.com' : 'https://api.devnet.solana.com');
 const port = Number(process.env.PORT ?? 4021);
+const challengeBindingSecret = process.env.PAY_KIT_MPP_SECRET ?? randomBytes(32).toString('hex');
 
-if (!privateKey || !recipient) {
-  throw new Error('Set SOLANA_PRIVATE_KEY (base58 keypair bytes) and SOLANA_RECIPIENT');
+if (!recipient) {
+  throw new Error('Pass the recipient address as the first argument or set SOLANA_RECIPIENT');
 }
 
-const signer = await createKeyPairSignerFromBytes(base58.decode(privateKey));
+// A throwaway in-memory operator is safer for the devnet demo than exporting a
+// mobile-wallet private key. Production deployments must provide a persistent,
+// server-managed SOLANA_PRIVATE_KEY.
+const signer = privateKey
+  ? await createKeyPairSignerFromBytes(base58.decode(privateKey))
+  : await generateKeyPairSigner();
 const pay = await createPayKit({
+  mpp: { challengeBindingSecret },
   network,
   operator: { recipient, signer },
   pricing: {
@@ -56,4 +64,6 @@ app.get('/sessions/receipt/:channelId', routes.receipt);
 
 app.listen(port, () => {
   console.log(`BoundKey MPP demo merchant: http://127.0.0.1:${port}/research`);
+  console.log(`MPP operator: ${signer.address}${privateKey ? '' : ' (ephemeral devnet signer)'}`);
+  if (!process.env.PAY_KIT_MPP_SECRET) console.log('MPP challenge binding: ephemeral devnet secret');
 });

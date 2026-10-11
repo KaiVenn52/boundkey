@@ -11,6 +11,7 @@ import { canonicalJson } from '../../../packages/protocol/src/index.js';
 
 export type BoundKeyMobileOpenerOptions = {
   bridgeBaseUrl: string;
+  publicBridgeBaseUrl?: string;
   agentName?: string;
   maxSpendAtomic?: string;
   approvalTimeoutMs?: number;
@@ -63,7 +64,9 @@ async function waitForMobileApproval(baseUrl: string, requestId: string, timeout
  */
 export function createBoundKeyMobileOpener(options: BoundKeyMobileOpenerOptions): SessionOpener {
   const baseUrl = options.bridgeBaseUrl.replace(/\/$/, '');
-  const timeoutMs = options.approvalTimeoutMs ?? 120_000;
+  const publicBaseUrl = (options.publicBridgeBaseUrl ?? options.bridgeBaseUrl).replace(/\/$/, '');
+  // Keep the desktop waiter alive for most of the 10-minute mobile request TTL.
+  const timeoutMs = options.approvalTimeoutMs ?? 540_000;
   const pollIntervalMs = options.pollIntervalMs ?? 700;
 
   return async ({ challenge, input }) => {
@@ -101,7 +104,7 @@ export function createBoundKeyMobileOpener(options: BoundKeyMobileOpenerOptions)
         purpose: details.description ?? 'Metered agent task',
         network: details.network,
         challenge: details,
-        bridgeUrl: baseUrl,
+        bridgeUrl: publicBaseUrl,
       }),
     });
     if (!createResponse.ok) throw new Error(`BoundKey bridge rejected request (${createResponse.status})`);

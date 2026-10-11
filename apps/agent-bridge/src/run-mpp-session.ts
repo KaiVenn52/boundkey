@@ -3,14 +3,16 @@ import { createBoundKeyMobileOpener } from './mobile-mpp-opener.js';
 
 const target = process.argv[2];
 if (!target) {
-  console.error('Usage: npm run mpp:session -- https://your-mpp-session-endpoint');
+  console.error('Usage: npm run mpp:session -- https://your-mpp-session-endpoint [http://local-bridge] [https://public-bridge]');
   process.exit(1);
 }
 
-const bridgeBaseUrl = process.env.BOUNDKEY_BRIDGE_URL ?? 'http://127.0.0.1:8787';
+const bridgeBaseUrl = process.argv[3] ?? process.env.BOUNDKEY_BRIDGE_URL ?? 'http://127.0.0.1:8787';
+const publicBridgeBaseUrl = process.argv[4] ?? process.env.BOUNDKEY_PUBLIC_BRIDGE_URL ?? bridgeBaseUrl;
 const client = createSessionFetch({
   opener: createBoundKeyMobileOpener({
     bridgeBaseUrl,
+    publicBridgeBaseUrl,
     agentName: process.env.BOUNDKEY_AGENT_NAME ?? 'Codex',
     onAuthorizationRequest: ({ deepLink }) => {
       console.log('\nAuthorization required. Open/scan this on the BoundKey Android app:\n');

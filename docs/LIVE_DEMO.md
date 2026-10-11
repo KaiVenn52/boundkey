@@ -32,15 +32,20 @@ export BOUNDKEY_BRIDGE_URL=https://bridge.example.com
 
 ## 3. Start the MPP demo merchant
 
-Set a throwaway operator key and recipient address:
+Set the recipient address. On devnet, if `SOLANA_PRIVATE_KEY` is omitted, the
+demo merchant creates a throwaway operator signer in memory and never asks you
+to export the mobile-wallet private key. It also creates an in-memory MPP
+challenge-binding secret when `PAY_KIT_MPP_SECRET` is omitted:
 
 ```bash
-export SOLANA_PRIVATE_KEY='BASE58_KEYPAIR_BYTES'
-export SOLANA_RECIPIENT='MERCHANT_SOLANA_ADDRESS'
 export SOLANA_NETWORK='devnet'
 export SOLANA_RPC_URL='https://api.devnet.solana.com'
-npm --workspace @boundkey/demo-merchant start
+npm --workspace @boundkey/demo-merchant start -- MERCHANT_SOLANA_ADDRESS
 ```
+
+Production deployments must set a persistent, server-managed
+`SOLANA_PRIVATE_KEY` and `PAY_KIT_MPP_SECRET`; never reuse or export the payer
+wallet key.
 
 Expose port `4021` over HTTPS.
 
@@ -58,8 +63,19 @@ The competition APK must be built and tested separately from this source check.
 
 ```bash
 cd apps/agent-bridge
-BOUNDKEY_BRIDGE_URL=https://bridge.example.com \
-  npm run mpp:session -- https://merchant.example.com/research
+npm run mpp:session -- \
+  https://merchant.example.com/research \
+  https://bridge.example.com
+```
+
+If the desktop cannot resolve the public tunnel hostname, keep desktop polling
+local and pass the phone-facing tunnel as a third URL:
+
+```bash
+npm run mpp:session -- \
+  http://127.0.0.1:4021/research \
+  http://127.0.0.1:8787 \
+  https://bridge.example.com
 ```
 
 Expected behavior:

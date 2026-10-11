@@ -82,15 +82,14 @@ export default function HomeScreen() {
   }
 
   async function approve() {
-    if (!wallet.account) {
-      await wallet.connect();
-      return;
-    }
-
     setApproving(true);
     setBlockedReason(null);
     try {
       if (live) {
+        if (!wallet.account) {
+          await wallet.connect();
+          return;
+        }
         const {
           context: { slot: minContextSlot },
         } = await wallet.client.rpc.getLatestBlockhash().send();
@@ -166,7 +165,14 @@ export default function HomeScreen() {
             <Text style={styles.walletText}>{wallet.account ? short(wallet.account.address.toString()) : 'Not connected'}</Text>
           </View>
         </View>
-        <Pressable onPress={wallet.account ? wallet.disconnect : wallet.connect} style={styles.smallButton}>
+        <Pressable onPress={async () => {
+          try {
+            if (wallet.account) await wallet.disconnect();
+            else await wallet.connect();
+          } catch (error) {
+            Alert.alert('Wallet connection failed', error instanceof Error ? error.message : String(error));
+          }
+        }} style={styles.smallButton}>
           <Text style={styles.smallButtonText}>{wallet.account ? 'Disconnect' : 'Connect'}</Text>
         </Pressable>
       </View>
@@ -178,7 +184,7 @@ export default function HomeScreen() {
         <>
           <Pressable disabled={approving} onPress={approve} style={[styles.primary, approving && styles.disabled]}>
             <Text style={styles.primaryText}>
-              {approving ? 'Preparing channel…' : !wallet.account ? 'Connect wallet to review' : live ? `Authorize up to $${maxSpend.toFixed(2)}` : 'Run safe offline demo'}
+              {approving ? 'Preparing channel…' : !live ? 'Run safe offline demo' : !wallet.account ? 'Connect wallet to review' : `Authorize up to $${maxSpend.toFixed(2)}`}
             </Text>
           </Pressable>
           <Text style={styles.approvalHint}>{live ? 'Your wallet signs the channel open. The delegated session key stays on the agent machine.' : 'Demo mode never sends a transaction. Scan a live MPP request to use Mobile Wallet Adapter.'}</Text>
@@ -190,7 +196,7 @@ export default function HomeScreen() {
             <Text style={styles.bigMoney}>${spent.toFixed(3)}</Text>
           </View>
           <View style={styles.track}><View style={[styles.fill, { width: `${progress * 100}%` }]} /></View>
-          <View style={styles.stats}><Text style={styles.muted}>{live ? 'streaming session' : `${calls} signed vouchers`}</Text><Text style={styles.muted}>${remaining.toFixed(3)} remaining</Text></View>
+          <View style={styles.stats}><Text style={styles.muted}>{live ? 'streaming session' : `${calls} simulated calls`}</Text><Text style={styles.muted}>${remaining.toFixed(3)} remaining</Text></View>
           {channelId && <Text style={styles.channel}>Channel · {short(channelId)}</Text>}
           {blockedReason && (
             <View style={styles.blocked}>
