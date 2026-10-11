@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "node --test packages/protocol/test/*.test.js && npm run test:mobile-security && npm run test:bridge-security",
-    "test:mobile-security": "tsx --test apps/mobile/src/lib/request.test.ts",
+    "test:mobile-security": "tsx --test apps/mobile/src/lib/request.test.ts apps/mobile/src/lib/paymentChannel.test.ts",
     "test:bridge-security": "node --test apps/agent-bridge/src/server.test.js",
     "demo": "node apps/agent-bridge/src/demo.js",
     "bridge": "node apps/agent-bridge/src/server.js",

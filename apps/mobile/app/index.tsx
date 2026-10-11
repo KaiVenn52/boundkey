@@ -7,7 +7,7 @@ import { useMobileWallet } from '@wallet-ui/react-native-kit';
 import { PermissionCard } from '../src/components/PermissionCard';
 import { QrScanner } from '../src/components/QrScanner';
 import { demoUsage, makeDemoRequest } from '../src/lib/demo';
-import { buildMobileAuthorizedOpen, returnApprovalToBridge } from '../src/lib/paymentChannel';
+import { buildMobileAuthorizedOpen, createMobilePartialSigner, returnApprovalToBridge } from '../src/lib/paymentChannel';
 import { isLiveMppRequest, parseRequestFromUrl, type PermissionRequest } from '../src/lib/request';
 
 type ActivityItem = { id: string; at: string; label: string; detail: string; tone: 'ok' | 'blocked' | 'info' };
@@ -90,10 +90,7 @@ export default function HomeScreen() {
           await wallet.connect();
           return;
         }
-        const {
-          context: { slot: minContextSlot },
-        } = await wallet.client.rpc.getLatestBlockhash().send();
-        const payerSigner = wallet.getTransactionSigner(wallet.account.address, minContextSlot);
+        const payerSigner = createMobilePartialSigner(wallet.account.address, transactions => wallet.signTransactions(transactions));
         const open = await buildMobileAuthorizedOpen(request, payerSigner);
         await returnApprovalToBridge(request, open);
         setChannelId(open.channelId);

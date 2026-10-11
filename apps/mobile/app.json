@@ -2,13 +2,13 @@
   "expo": {
     "name": "BoundKey",
     "slug": "boundkey",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "orientation": "portrait",
     "scheme": "boundkey",
     "userInterfaceStyle": "dark",
     "android": {
       "package": "com.kaivenn.boundkey",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": ["CAMERA"],
       "adaptiveIcon": { "backgroundColor": "#09090B" },
       "intentFilters": [
