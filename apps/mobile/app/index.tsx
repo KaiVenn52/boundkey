@@ -189,11 +189,11 @@ export default function HomeScreen() {
       ) : (
         <View style={styles.activeCard}>
           <View style={styles.activeHeader}>
-            <View><Text style={styles.status}>● CAPABILITY ACTIVE</Text><Text style={styles.activeTitle}>{request.agent.name} → {request.merchant.name}</Text></View>
-            <Text style={styles.bigMoney}>${spent.toFixed(3)}</Text>
+            <View><Text style={styles.status}>{live ? '● WALLET AUTHORIZED' : '● CAPABILITY ACTIVE'}</Text><Text style={styles.activeTitle}>{request.agent.name} → {request.merchant.name}</Text></View>
+            <Text style={styles.bigMoney}>{live ? `≤$${maxSpend.toFixed(2)}` : `$${spent.toFixed(3)}`}</Text>
           </View>
-          <View style={styles.track}><View style={[styles.fill, { width: `${progress * 100}%` }]} /></View>
-          <View style={styles.stats}><Text style={styles.muted}>{live ? 'streaming session' : `${calls} simulated calls`}</Text><Text style={styles.muted}>${remaining.toFixed(3)} remaining</Text></View>
+          {!live && <View style={styles.track}><View style={[styles.fill, { width: `${progress * 100}%` }]} /></View>}
+          <View style={styles.stats}><Text style={styles.muted}>{live ? 'Signed open returned to agent' : `${calls} simulated calls`}</Text><Text style={styles.muted}>{live ? 'Usage and settlement in agent receipt' : `$${remaining.toFixed(3)} remaining`}</Text></View>
           {channelId && <Text style={styles.channel}>Channel · {short(channelId)}</Text>}
           {blockedReason && (
             <View style={styles.blocked}>
@@ -210,7 +210,7 @@ export default function HomeScreen() {
               </View>
             </>
           )}
-          <Pressable onPress={endCapability} style={styles.end}><Text style={styles.endText}>End capability</Text></Pressable>
+          {live ? <Text style={styles.approvalHint}>This screen confirms wallet authorization. The merchant broadcasts the channel open; check the agent receipt for confirmation. Closing this view does not revoke the on-chain channel.</Text> : <Pressable onPress={endCapability} style={styles.end}><Text style={styles.endText}>End capability</Text></Pressable>}
         </View>
       )}
 
