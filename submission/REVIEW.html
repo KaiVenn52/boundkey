@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BoundKey submission review</title>
+<style>body{font:17px/1.65 system-ui;background:#09090b;color:#e4e4e7;max-width:960px;margin:60px auto;padding:0 24px}h1{font-size:48px;line-height:1.1}h2{margin-top:44px;color:#8af0a0}a{color:#8af0a0}section{border-top:1px solid #303036;padding-top:20px}blockquote{border-left:3px solid #8af0a0;margin-left:0;padding-left:20px}button{font:inherit;padding:8px 16px;background:#8af0a0;border:0;border-radius:8px;cursor:pointer}small{color:#a1a1aa}video{max-width:100%;max-height:650px}pre{white-space:pre-wrap;overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}td,th{text-align:left;border-bottom:1px solid #303036;padding:10px}</style>
+<small>CLOCK IN 2026 / Review before submission / Not submitted</small>
+<h1>BoundKey</h1><blockquote>Give the agent a key. Not your wallet.</blockquote>
+<p>Your phone approves an agent's payment budget. The agent gets a disposable session key restricted to one service and a hard spend ceiling.</p>
+<section><h2>Review the deliverables</h2>
+<p><a href="../dist/BoundKey-0.3.0.apk">Installable Android APK</a> · <a href="../dist/BoundKey-demo.mp4">Demo video</a> · <a href="BoundKey_pitch_deck.pptx">Pitch deck</a> · <a href="https://github.com/KaiVenn52/boundkey/tree/codex/submission-ready">Source code</a></p>
+<video controls preload="metadata" src="../dist/BoundKey-demo.mp4"></video>
+<p><small>Video labels distinguish the offline security demonstration from any verified Devnet transaction. APK and video links become available when the build and recording finish.</small></p>
+</section><section><h2>Project description</h2><button onclick="navigator.clipboard.writeText(document.getElementById('description').innerText)">Copy description</button>
+<div id="description"><p>AI agents need to buy metered APIs and data. Giving an agent a wallet key exposes more money than the task needs, while approving every small payment interrupts the work.</p>
+<p>BoundKey lets the user approve a narrow payment permission on Android. The agent creates a disposable Ed25519 session key and sends a proof-bound request to the phone. The user reviews the service, recipient and maximum USDC spend before their existing wallet signs through Mobile Wallet Adapter.</p>
+<p>The phone builds a Solana Payment Channel open transaction. The payer wallet stays on the phone, while the agent holds the session key used to sign cumulative MPP vouchers. The channel binds payments to its recipient and deposit. Request validation also checks that the amount and recipient shown on screen match the embedded payment challenge.</p>
+<p>The Android application includes a safe offline demonstration for judges: three simulated API calls consume $0.035 of a $0.50 budget, then a $5 request and a changed recipient are blocked. This demonstration sends no transaction. The repository includes the real MWA signing path, a merchant service, the desktop session bridge, and 20 protocol and security tests.</p>
+<p>BoundKey is a hackathon prototype for developers running agents that need metered payments. The next steps are persistent service hosting, stronger device pairing, transaction decoding and security review before any production custody use.</p></div>
+</section><section><h2>Judge setup</h2><p>Install the APK on Android, open BoundKey and tap <strong>Run safe offline demo</strong>. No wallet or development server is required for this demonstration. Generate three calls, try the $5 attack, change the payee, and end the capability. Live testing uses a dedicated Devnet wallet and the instructions in the repository.</p>
+<p><a href="EVIDENCE.md">Build and runtime evidence</a> · <a href="../docs/LIVE_DEMO.md">Live Devnet setup</a> · <a href="../docs/SECURITY.md">Security model</a></p>
+</section><section><h2>Final submission</h2><p>Target: CLOCK IN, Solana Mobile Hackathon. The portal screenshot supplied by the user lists October 12, 2026 at 19:59 GMT+8. Confirm the portal's current deadline when reviewing.</p><p><a href="https://solanamobile.radiant.nexus/">Open submission portal</a>. Final submission remains pending the owner's review.</p></section>
+</html>

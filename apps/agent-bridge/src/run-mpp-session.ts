@@ -1,4 +1,5 @@
 import { createSessionFetch } from '@solana/mpp/client';
+import { execFileSync } from 'node:child_process';
 import { createBoundKeyMobileOpener } from './mobile-mpp-opener.js';
 
 const target = process.argv[2];
@@ -17,6 +18,13 @@ const client = createSessionFetch({
     onAuthorizationRequest: ({ deepLink }) => {
       console.log('\nAuthorization required. Open/scan this on the BoundKey Android app:\n');
       console.log(deepLink);
+      // Optional USB handoff uses the same proof-bound URL as the QR scanner.
+      if (process.env.BOUNDKEY_ADB_PATH) {
+        execFileSync(process.env.BOUNDKEY_ADB_PATH, [
+          'shell', 'am', 'start', '-a', 'android.intent.action.VIEW',
+          '-d', deepLink, 'com.kaivenn.boundkey',
+        ], { stdio: 'inherit' });
+      }
       console.log('\nWaiting for mobile wallet approval…\n');
     },
   }),

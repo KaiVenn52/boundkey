@@ -10,3 +10,6 @@ android/app/build/
 !.env.example
 .DS_Store
 boundkey-submission.zip
+dist/
+submission/android-evidence/
+submission/phone-evidence/
